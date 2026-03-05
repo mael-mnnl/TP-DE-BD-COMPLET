@@ -1,0 +1,36 @@
+fichier résultat du test : testinsert_vue_reparations_en_cours.out
+
+--- Contenu de la vue AVANT insertion ---
+
+aucune ligne sélectionnée.
+
+SQL> -- cas 1 : INSERT via la vue en fournissant uniquement les colonnes de REPARATION
+SQL> --         → DOIT RÉUSSIR
+SQL> INSERT INTO vue_reparations_en_cours
+  2      (id_reparation, etat, duree_prevue, date_debut_prevue, date_fin_prevue, id_velo)
+  3  VALUES
+  4      (10, 'encours', 4, TO_DATE('20/01/2026','dd/mm/yyyy'), TO_DATE('24/01/2026','dd/mm/yyyy'), 1);
+
+1 ligne créée.
+
+SQL> -- cas 2 : INSERT en tentant de fournir num_velo (non insertable via cette vue)
+SQL> --         → DOIT ÉCHOUER
+SQL> INSERT INTO vue_reparations_en_cours
+  2      (id_reparation, etat, duree_prevue, date_debut_prevue, date_fin_prevue, id_velo, num_velo)
+  3  VALUES
+  4      (11, 'encours', 2, TO_DATE('21/01/2026','dd/mm/yyyy'), TO_DATE('23/01/2026','dd/mm/yyyy'), 1, 'VELOTEST');
+
+INSERT INTO vue_reparations_en_cours
+*
+ERREUR à la ligne 1 :
+ORA-01776: impossible de modifier plusieurs tables de base via la vue jointe
+
+SQL> SET ECHO OFF
+
+--- Contenu de la vue APRÈS insertion ---
+
+ID_REPARATION ETAT       DUREE_PREVUE DATE_DEBU DATE_FIN_ DATE_DEBU DATE_FIN_  COUT_TOTAL    ID_VELO NUM_VELO
+------------- ---------- ------------ --------- --------- --------- ---------- ---------- ---------- -----------
+           10 encours               4 20/01/2026 24/01/2026                                         1 VELO001
+
+1 ligne sélectionnée.

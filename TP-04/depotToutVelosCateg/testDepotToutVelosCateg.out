@@ -1,0 +1,72 @@
+fichier résultat du test : testDepotToutVelosCateg.out
+Contenu de la base :
+--- TABLE : CATEG_VELO ---
+
+  ID_CATEG LIBELLE
+---------- --------------------
+         1 homme
+         2 femme
+         3 enfant
+
+--- TABLE : CLIENT ---
+
+ ID_CLIENT NOM                  PRENOM               EMAIL                                              TEL        ID_ADRESSE
+---------- -------------------- -------------------- -------------------------------------------------- ---------- ----------
+         1 Dupont               Jean                 jean.dupont@email.com                              0612345678          1
+         2 Martin               Sophie               sophie.martin@email.com                            0623456789          2
+         3 Bernard              Luc                  luc.bernard@email.com                              0634567890          3
+
+--- TABLE : VELO ---
+
+   ID_VELO NUM_VELO
+---------- ----------------------------------------------------------------------------------------------------
+         1 VELO001
+         2 VELO002
+         3 VELO003
+         4 VELO004
+         5 VELO005
+
+--- TABLE : DETAIL_VELO ---
+
+ID_DETAIL_VELO    ID_VELO   ID_MARQUE    ID_TYPE   ID_CATEG  ID_TAILLE DATE_FAB
+-------------- ---------- ----------- ---------- ---------- ---------- ---------
+             1          1           1          1          1          1
+             2          2           1          1          2          1
+             3          3           1          1          3          1
+             4          4           1          1          1          1
+             5          5           1          1          2          1
+
+--- TABLE : DEPOT ---
+
+  ID_DEPOT  ID_CLIENT    ID_VELO DATE_DEPO
+---------- ---------- ---------- ---------
+         1          1          1 10/01/2023
+         2          1          2 11/01/2023
+         3          1          3 12/01/2023
+         4          2          4 10/01/2023
+         5          2          5 11/01/2023
+
+'Résultat de la requête:'
+
+SQL> SELECT DISTINCT
+  2      c.nom,
+  3      c.prenom
+  4  FROM client c
+  5  WHERE NOT EXISTS (
+  6      SELECT 1
+  7      FROM categ_velo cv
+  8      WHERE NOT EXISTS (
+  9          SELECT 1
+ 10          FROM depot d
+ 11          JOIN detail_velo dv ON dv.id_velo = d.id_velo
+ 12          WHERE d.id_client = c.id_client
+ 13            AND dv.id_categ = cv.id_categ
+ 14      )
+ 15  )
+ 16  ORDER BY c.nom, c.prenom;
+
+NOM                  PRENOM
+-------------------- --------------------
+Dupont               Jean
+
+1 ligne sélectionnée.

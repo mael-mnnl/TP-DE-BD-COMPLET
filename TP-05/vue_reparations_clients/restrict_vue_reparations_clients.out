@@ -1,0 +1,24 @@
+fichier résultat du test : restrict_vue_reparations_clients.out
+
+COLUMN_NAME               UPDATABLE  INSERTABLE DELETABLE
+------------------------- ---------- ---------- ----------
+COUT_TOTAL                NO         NO         NO
+DATE_DEBUT_PREVUE         NO         NO         NO
+DATE_FIN_PREVUE           NO         NO         NO
+DUREE_PREVUE              NO         NO         NO
+EMAIL                     NO         NO         NO
+ETAT                      NO         NO         NO
+ID_REPARATION             NO         NO         NO
+NOM                       NO         NO         NO
+NUM_VELO                  NO         NO         NO
+PRENOM                    NO         NO         NO
+TEL                       NO         NO         NO
+
+11 lignes sélectionnées.
+
+-- Analyse :
+-- La vue repose sur 4 tables jointes (REPARATION, VELO, DEPOT, CLIENT).
+-- Aucune colonne n'est modifiable, insertable ou supprimable via cette vue.
+-- En Oracle, une vue sur plus de 2 tables jointes ou sans table préservée par clé
+-- est en lecture seule (UPDATABLE=NO, INSERTABLE=NO, DELETABLE=NO).
+-- Cette vue est donc une VUE EN LECTURE SEULE.

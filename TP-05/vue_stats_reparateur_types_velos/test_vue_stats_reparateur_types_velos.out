@@ -1,0 +1,125 @@
+fichier résultat du test : test_vue_stats_reparateur_types_velos.out
+Contenu de la base :
+--- TABLE : ADRESSE ---
+
+ID_ADRESSE INTITULE                          COMMUNE       CODE_POST
+---------- --------------------------------- ------------- ----------
+         1 10 rue des Fleurs                 La Rochelle   17000
+
+--- TABLE : CATEG_VELO ---
+
+  ID_CATEG LIBELLE
+---------- --------------------
+         1 HOMME
+
+--- TABLE : MARQUE_VELO ---
+
+  ID_MARQUE LIBELLE
+----------- --------------------
+          1 BTWIN
+
+--- TABLE : TAILLE_VELO ---
+
+  ID_TAILLE LIBELLE
+----------- --------------------
+          1 M
+
+--- TABLE : TYPE_VELO ---
+
+  ID_TYPE LIBELLE
+--------- --------------------
+        1 VTT
+        2 VTC
+
+--- TABLE : REPARATEUR ---
+
+ID_REPARATEUR LOGIN
+------------- --------------------
+            1 michelo
+            2 julie_b
+
+--- TABLE : CLIENT ---
+
+ ID_CLIENT NOM                  PRENOM               EMAIL                                              TEL        ID_ADRESSE
+---------- -------------------- -------------------- -------------------------------------------------- ---------- ----------
+         1 Dupont               Jean                 jean.dupont@email.com                              0612345678          1
+
+--- TABLE : VELO ---
+
+   ID_VELO NUM_VELO
+---------- ----------------------------------------------------------------------------------------------------
+         1 VELO001
+         2 VELO002
+         3 VELO003
+
+--- TABLE : DETAIL_VELO ---
+
+ID_DETAIL_VELO    ID_VELO   ID_MARQUE    ID_TYPE   ID_CATEG  ID_TAILLE DATE_FAB
+-------------- ---------- ----------- ---------- ---------- ---------- ---------
+             1          1           1          1          1          1
+             2          2           1          2          1          1
+             3          3           1          1          1          1
+
+--- TABLE : DEPOT ---
+
+  ID_DEPOT  ID_CLIENT    ID_VELO DATE_DEPO
+---------- ---------- ---------- ---------
+         1          1          1 01/01/2026
+         2          1          2 02/01/2026
+         3          1          3 03/01/2026
+
+--- TABLE : REPARATION ---
+
+ID_REPARATION DUREE_PREVUE DATE_DEBU DATE_DEBU DATE_FIN_ DATE_FIN_ ETAT         COUT_TOTAL    ID_VELO
+------------- ------------ --------- --------- --------- --------- ---------- ------------ ----------
+            1            3 05/01/2026 05/01/2026 08/01/2026 09/01/2026 terminee           80          1
+            2            2 06/01/2026 06/01/2026 08/01/2026 08/01/2026 terminee           60          2
+            3            1 07/01/2026 07/01/2026 08/01/2026 08/01/2026 terminee           40          3
+
+--- TABLE : OPERATION ---
+
+ID_OPERATION INTITULE                           DUREE_PREVUE DATE_DEBU DATE_FIN_      ETAT       COUT ID_REPARATION ID_REPARATEUR
+------------ ---------------------------------- ------------ --------- --------- ---------- --------- ------------- -------------
+           1 Changement roue AR                            1 05/01/2026 06/01/2026 terminee        50             1             1
+           2 Réglage freins                                1 07/01/2026 08/01/2026 terminee        30             3             1
+           3 Remplacement câble                            1 06/01/2026 07/01/2026 terminee        40             2             2
+           4 Graissage chaîne                              1 05/01/2026 06/01/2026 terminee        20             1             2
+
+--- TABLE : FACTURE ---
+
+aucune ligne sélectionnée.
+
+--- TABLE : REGLEMENT ---
+
+aucune ligne sélectionnée.
+
+'Contenu de la vue vue_stats_reparateur_types_velos :'
+
+SQL> CREATE OR REPLACE VIEW vue_stats_reparateur_types_velos AS
+  2  SELECT
+  3      rep.login,
+  4      tv.libelle       AS type_velo,
+  5      COUNT(op.id_operation)  AS nb_operations,
+  6      SUM(op.cout)            AS cout_total
+  7  FROM reparateur rep
+  8  JOIN operation   op  ON rep.id_reparateur = op.id_reparateur
+  9  JOIN reparation  r   ON op.id_reparation  = r.id_reparation
+  10 JOIN velo        v   ON r.id_velo         = v.id_velo
+  11 JOIN detail_velo dv  ON v.id_velo         = dv.id_velo
+  12 JOIN type_velo   tv  ON dv.id_type        = tv.id_type
+  13 GROUP BY rep.login, tv.libelle
+  14 ORDER BY rep.login, tv.libelle;
+
+Vue créée.
+
+SQL> SELECT * FROM vue_stats_reparateur_types_velos;
+
+LOGIN                TYPE_VELO            NB_OPERATIONS COUT_TOTAL
+-------------------- -------------------- ------------- ----------
+julie_b              VTC                              1         40
+julie_b              VTT                              1         20
+michelo              VTT                              2         80
+
+3 lignes sélectionnées.
+
+SQL> SET ECHO OFF

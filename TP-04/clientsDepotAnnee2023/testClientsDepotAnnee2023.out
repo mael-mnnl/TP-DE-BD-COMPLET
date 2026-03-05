@@ -1,0 +1,57 @@
+fichier résultat du test : testClientsDepotAnnee2023.out
+Contenu de la base :
+--- TABLE : ADRESSE ---
+
+ID_ADRESSE INTITULE                          COMMUNE       CODE_POST
+---------- --------------------------------- ------------- ----------
+         1 10 rue des Fleurs                 La Rochelle   17000
+         2 25 avenue du Port                 La Rochelle   17000
+         3 5 place de la Mairie              Rochefort     17300
+         4 12 rue du Commerce                Saintes       17100
+
+--- TABLE : CLIENT ---
+
+ ID_CLIENT NOM                  PRENOM               EMAIL                                              TEL        ID_ADRESSE
+---------- -------------------- -------------------- -------------------------------------------------- ---------- ----------
+         1 Dupont               Jean                 jean.dupont@email.com                              0612345678          1
+         2 Martin               Sophie               sophie.martin@email.com                            0623456789          2
+         3 Bernard              Luc                  luc.bernard@email.com                              0634567890          3
+         4 Durand               Marie                marie.durand@email.com                             0645678901          4
+         5 Petit                Paul                 paul.petit@email.com                               0656789012          1
+
+--- TABLE : VELO ---
+
+   ID_VELO NUM_VELO
+---------- ----------------------------------------------------------------------------------------------------
+         1 VELO001
+         2 VELO002
+         3 VELO003
+         4 VELO004
+
+--- TABLE : DEPOT ---
+
+  ID_DEPOT  ID_CLIENT    ID_VELO DATE_DEPO
+---------- ---------- ---------- ---------
+         1          1          1 15/03/2023
+         2          2          2 20/06/2023
+         3          3          3 10/07/2023
+         4          3          3 05/11/2022
+         5          4          4 01/04/2022
+
+'Résultat de la requête:'
+
+SQL> SELECT DISTINCT
+  2      c.nom,
+  3      c.prenom
+  4  FROM client c
+  5  JOIN depot d ON d.id_client = c.id_client
+  6  WHERE EXTRACT(YEAR FROM d.date_depot) = 2023
+  7  ORDER BY c.nom, c.prenom;
+
+NOM                  PRENOM
+-------------------- --------------------
+Bernard              Luc
+Dupont               Jean
+Martin               Sophie
+
+3 ligne(s) sélectionnée(s).

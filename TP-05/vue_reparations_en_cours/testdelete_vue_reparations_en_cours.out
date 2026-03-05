@@ -1,0 +1,35 @@
+fichier résultat du test : testdelete_vue_reparations_en_cours.out
+
+--- Contenu de la vue AVANT DELETE ---
+
+ID_REPARATION ETAT       DUREE_PREVUE DATE_DEBU DATE_FIN_ DATE_DEBU DATE_FIN_  COUT_TOTAL    ID_VELO NUM_VELO
+------------- ---------- ------------ --------- --------- --------- ---------- ---------- ---------- -----------
+            1 encours               3 05/01/2026 08/01/2026 05/01/2026                              1 VELO001
+            2 ouverte               5 10/01/2026 15/01/2026                                         2 VELO002
+
+2 lignes sélectionnées.
+
+SQL> -- cas 1 : DELETE d'une réparation visible dans la vue (etat = 'encours')
+SQL> --         → DOIT RÉUSSIR
+SQL> DELETE FROM vue_reparations_en_cours
+  2  WHERE id_reparation = 1;
+
+1 ligne supprimée.
+
+SQL> SET ECHO OFF
+
+--- Contenu de la vue APRÈS DELETE ---
+
+ID_REPARATION ETAT       DUREE_PREVUE DATE_DEBU DATE_FIN_ DATE_DEBU DATE_FIN_  COUT_TOTAL    ID_VELO NUM_VELO
+------------- ---------- ------------ --------- --------- --------- ---------- ---------- ---------- -----------
+            2 ouverte               5 10/01/2026 15/01/2026                                         2 VELO002
+
+1 ligne sélectionnée.
+
+--- Vérification : la table REPARATION ---
+
+ID_REPARATION DUREE_PREVUE DATE_DEBU DATE_DEBU DATE_FIN_ DATE_FIN_ ETAT         COUT_TOTAL    ID_VELO
+------------- ------------ --------- --------- --------- --------- ---------- ------------ ----------
+            2            5 10/01/2026           15/01/2026            ouverte                        2
+
+1 ligne sélectionnée.

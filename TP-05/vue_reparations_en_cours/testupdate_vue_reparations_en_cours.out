@@ -1,0 +1,38 @@
+fichier résultat du test : testupdate_vue_reparations_en_cours.out
+
+--- Contenu de la vue AVANT UPDATE ---
+
+ID_REPARATION ETAT       DUREE_PREVUE DATE_DEBU DATE_FIN_ DATE_DEBU DATE_FIN_  COUT_TOTAL    ID_VELO NUM_VELO
+------------- ---------- ------------ --------- --------- --------- ---------- ---------- ---------- -----------
+            1 encours               3 05/01/2026 08/01/2026 05/01/2026                              1 VELO001
+
+1 ligne sélectionnée.
+
+SQL> -- cas 1 : UPDATE d'une colonne de REPARATION (cout_total)
+SQL> --         → DOIT RÉUSSIR
+SQL> UPDATE vue_reparations_en_cours
+  2  SET cout_total = 95.00
+  3  WHERE id_reparation = 1;
+
+1 ligne mise à jour.
+
+SQL> -- cas 2 : UPDATE de num_velo (colonne de VELO, non modifiable)
+SQL> --         → DOIT ÉCHOUER
+SQL> UPDATE vue_reparations_en_cours
+  2  SET num_velo = 'VELO_MODIF'
+  3  WHERE id_reparation = 1;
+
+UPDATE vue_reparations_en_cours
+*
+ERREUR à la ligne 1 :
+ORA-01779: impossible de modifier une colonne qui correspond à une table non préservée par clé
+
+SQL> SET ECHO OFF
+
+--- Contenu de la vue APRÈS UPDATE ---
+
+ID_REPARATION ETAT       DUREE_PREVUE DATE_DEBU DATE_FIN_ DATE_DEBU DATE_FIN_  COUT_TOTAL    ID_VELO NUM_VELO
+------------- ---------- ------------ --------- --------- --------- ---------- ---------- ---------- -----------
+            1 encours               3 05/01/2026 08/01/2026 05/01/2026              95        1 VELO001
+
+1 ligne sélectionnée.

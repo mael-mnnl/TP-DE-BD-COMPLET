@@ -1,0 +1,25 @@
+fichier résultat du test : restrict_vue_reparations_en_cours.out
+
+COLUMN_NAME               UPDATABLE  INSERTABLE DELETABLE
+------------------------- ---------- ---------- ----------
+COUT_TOTAL                YES        YES        YES
+DATE_DEBUT_PREVUE         YES        YES        YES
+DATE_DEBUT_REELLE         YES        YES        YES
+DATE_FIN_PREVUE           YES        YES        YES
+DATE_FIN_REELLE           YES        YES        YES
+DUREE_PREVUE              YES        YES        YES
+ETAT                      YES        YES        YES
+ID_REPARATION             YES        YES        YES
+ID_VELO                   NO         NO         YES
+NUM_VELO                  NO         NO         YES
+
+10 lignes sélectionnées.
+
+-- Analyse :
+-- Les colonnes provenant de la table REPARATION (côté clé primaire de la jointure)
+-- sont modifiables (UPDATABLE=YES, INSERTABLE=YES).
+-- Les colonnes provenant de la table VELO (côté référencé de la jointure FK)
+-- ne sont PAS insertables ni modifiables via cette vue (UPDATABLE=NO, INSERTABLE=NO),
+-- mais la suppression reste possible (DELETABLE=YES) car elle porte sur la table de base.
+-- La vue repose sur une jointure (JOIN) → les INSERT et UPDATE ne sont possibles
+-- que sur les colonnes de la table principale (REPARATION).

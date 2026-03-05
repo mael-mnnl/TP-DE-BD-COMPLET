@@ -1,0 +1,16 @@
+fichier résultat du test : restrict_vue_stats_reparateur_types_velos.out
+
+COLUMN_NAME               UPDATABLE  INSERTABLE DELETABLE
+------------------------- ---------- ---------- ----------
+COUT_TOTAL                NO         NO         NO
+LOGIN                     NO         NO         NO
+NB_OPERATIONS             NO         NO         NO
+TYPE_VELO                 NO         NO         NO
+
+4 lignes sélectionnées.
+
+-- Analyse :
+-- La vue contient une clause GROUP BY avec des fonctions d'agrégation (COUNT, SUM).
+-- En Oracle, toute vue contenant GROUP BY, DISTINCT, une fonction d'agrégation,
+-- ou une opération ensembliste est strictement en LECTURE SEULE.
+-- Aucune opération de modification (INSERT, UPDATE, DELETE) n'est possible via cette vue.

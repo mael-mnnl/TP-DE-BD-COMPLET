@@ -1,0 +1,24 @@
+fichier résultat du test : testinsert_vue_reparations_clients.out
+
+--- Contenu de la vue AVANT insertion ---
+
+aucune ligne sélectionnée.
+
+SQL> -- cas 1 : tentative d'INSERT dans une vue en lecture seule
+SQL> --         → DOIT ÉCHOUER
+SQL> INSERT INTO vue_reparations_clients
+  2      (id_reparation, etat, duree_prevue, date_debut_prevue, date_fin_prevue, num_velo, nom, prenom, email, tel)
+  3  VALUES
+  4      (99, 'encours', 3, TO_DATE('20/01/2026','dd/mm/yyyy'), TO_DATE('23/01/2026','dd/mm/yyyy'),
+  5       'VELO001', 'Dupont', 'Jean', 'jean.dupont@email.com', '0612345678');
+
+INSERT INTO vue_reparations_clients
+*
+ERREUR à la ligne 1 :
+ORA-01779: impossible de modifier une colonne qui correspond à une table non préservée par clé
+
+SQL> SET ECHO OFF
+
+--- Contenu de la vue APRÈS tentative d'insertion ---
+
+aucune ligne sélectionnée.
